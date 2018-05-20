@@ -1,0 +1,18 @@
+# IDE/OS artifacts
+.idea
+.DS_Store
+
+
+# Development artifacts
+*.pyc
+*.pyo
+.coverage
+.mypy_cache
+.venv
+__pycache__
+db.sqlite3
+myproject.tgz
+
+
+# Build artifacts
+vendor

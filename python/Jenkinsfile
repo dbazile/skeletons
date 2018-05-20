@@ -1,0 +1,19 @@
+node {
+    checkout scm
+
+    withDockerContainer(image: 'python:3') {
+        stage('Install dependencies') {
+            sh 'pip install -r requirements.txt -r requirements-dev.txt'
+        }
+
+        stage('Test') {
+            sh './scripts/test.sh'
+            archive '.coverage'
+        }
+
+        stage('Archive') {
+            sh './scripts/package.sh'
+            archive 'myproject.tgz'
+        }
+    }
+}
