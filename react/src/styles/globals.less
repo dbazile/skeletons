@@ -1,0 +1,43 @@
+@import 'constants.less';
+
+:global {
+    * {
+        box-sizing: inherit;
+    }
+
+    html {
+        box-sizing: border-box;
+
+        background-color: white;
+        color: black;
+
+        font-family: @FONT_NORMAL;
+        font-weight: 200;
+        font-size: 14px;
+    }
+
+    body {
+        margin: 100px;
+    }
+
+    a {
+        color: @COLOR_BLUE;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0;
+        color: @COLOR_PURPLE;
+        font-family: @FONT_HEADING;
+        font-weight: 200;
+    }
+
+    button,
+    input {
+        font-family: @FONT_NORMAL;
+    }
+}

@@ -1,0 +1,21 @@
+@import "../../styles/constants";
+
+@textColor: black;
+@fontFamily: @FONT_LABEL;
+@fontSize: 1rem;
+
+.root {
+    cursor: pointer;
+    color: @textColor;
+}
+
+.text {
+    .isLarge & {
+        font-size: @fontSize * 2;
+    }
+
+    .isSmall & {
+        font-size: @fontSize * .95;
+        color: lighten(@textColor, 50%);
+    }
+}

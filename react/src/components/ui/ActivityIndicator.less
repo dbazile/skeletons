@@ -1,0 +1,86 @@
+@import "../../styles/constants";
+
+@mercury__dropColor: @COLOR_GREY;
+@mercury__trackColor: @COLOR_SILVER;
+@mercury__animationDuration: 1s;
+@disc__backgroundColor: lighten(@COLOR_BLUE, 45%);
+@disc__glareColor: white;
+@disc__outlineColor: lighten(@COLOR_BLUE, 15%);
+@disc__animationDuration: 1.5s;
+
+/* =========================================================================
+   Mercury
+   ========================================================================= */
+
+.mercury {
+    display: inline-block;
+    color: @mercury__dropColor;
+    height: 20px;
+}
+
+.mercury__dropletLeft {
+    fill: currentColor;
+    transform-origin: 5px 5px;
+    animation: mercury-pool @mercury__animationDuration alternate infinite linear;
+}
+
+.mercury__dropletRight {
+    fill: currentColor;
+    transform-origin: 35px 5px;
+    animation: mercury-pool @mercury__animationDuration alternate-reverse infinite linear;
+}
+
+.mercury__track {
+    stroke: @mercury__trackColor;
+    stroke-width: 1px;
+    stroke-linecap: round;
+}
+
+.mercury__stream {
+    stroke-dasharray: 30;
+    stroke: currentColor;
+    stroke-width: 1px;
+    stroke-linecap: round;
+    animation: mercury-travel @mercury__animationDuration alternate infinite linear;
+}
+
+@keyframes mercury-pool {
+    0%, 45% { transform: scale(0.0); }
+    65% { transform: scale(0.15); }
+    97%, 100% { transform: scale(1.0); }
+}
+
+@keyframes mercury-travel {
+    0%, 30% { stroke-dashoffset: -30; }
+    70%, 100% { stroke-dashoffset: 30; }
+}
+
+/* =========================================================================
+   Disc
+   ========================================================================= */
+
+.disc {
+    display: inline-block;
+    color: @disc__backgroundColor;
+    height: 30px;
+}
+
+.disc__group {
+    transform-origin: 15px 15px;
+    animation: disc-spin @disc__animationDuration infinite linear;
+}
+
+.disc__disc {
+    fill: currentColor;
+    stroke: @disc__outlineColor;
+    stroke-width: 1px;
+}
+
+.disc__glare {
+    fill: @disc__glareColor;
+}
+
+@keyframes disc-spin {
+    from { transform: rotate(-360deg); }
+    to { transform: rotate(0deg); }
+}
