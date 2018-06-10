@@ -9,6 +9,8 @@
 <script lang="ts">
     import { Component, Vue } from 'vue-property-decorator'
 
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
     @Component
     export default class Application extends Vue {
         private foo: number = 1
@@ -19,7 +21,7 @@
 
         async stuff() {
             console.log('before async stuff (foo=%s)', this.foo)
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            await sleep(1000)
             this.foo = 999
             console.log('after async stuff (foo=%s)', this.foo)
         }

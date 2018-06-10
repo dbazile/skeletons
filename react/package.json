@@ -1,10 +1,7 @@
 {
-  "name": "starterkit-webpack",
+  "name": "new-react-app",
   "version": "1.0.0",
-  "description": "Starter project for Webpack SPAs",
-  "repository": "-",
-  "author": "David Bazile",
-  "license": "ISC",
+  "private": true,
   "dependencies": {
     "axios": "^0.18.0",
     "classnames": "^2.2.5",

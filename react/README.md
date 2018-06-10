@@ -1,6 +1,6 @@
-# new-webapp
+# new-react-application
 
-> Starter project for Webpack SPA webapps.
+> Skeleton for React apps.
 
 
 ## Running locally for development
