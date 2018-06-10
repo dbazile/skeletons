@@ -1,0 +1,17 @@
+node {
+    checkout scm
+
+    withDockerContainer(image: 'node:10') {
+        stage('Install dependencies') {
+            sh 'yarn install'
+        }
+
+        stage('Test') {
+            sh './scripts/test.sh <<< "y"'
+        }
+
+        stage('Build') {
+            sh './scripts/compile.sh <<< "y"'
+        }
+    }
+}
