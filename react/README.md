@@ -1,4 +1,4 @@
-# new-react-application
+# new-react-app
 
 > Skeleton for React apps.
 
