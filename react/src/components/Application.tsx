@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as $ from 'classnames'
-import { inject, observer, IReactComponent } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 
 import styles from './Application.less'
@@ -449,9 +449,15 @@ const UISandbox = () => (
 )
 
 
-export class Application extends React.Component<IInternalProps & IExternalProps, never> {
+@inject('store')
+@observer
+export class Application extends React.Component<IProps, {}> {
     componentDidMount() {
-        this.props.fetchRevision()
+        this.injected.store.fetchRevision()
+    }
+
+    private get injected() {
+        return this.props as IPropsInjected
     }
 
     render() {
@@ -459,7 +465,7 @@ export class Application extends React.Component<IInternalProps & IExternalProps
             <BrowserRouter>
                 <main className={$({
                     [styles.root]: true,
-                    [styles.isRed]: this.props.isRed,
+                    [styles.isRed]: this.injected.store.isRed,
                     'some-global-thing': true,
                 })}>
                     <header>
@@ -477,7 +483,7 @@ export class Application extends React.Component<IInternalProps & IExternalProps
                     </Switch>
 
                     <footer>
-                        <pre>this.props.$data = {JSON.stringify(this.props.$data, null, 4)}</pre>
+                        <pre>this.injected.store = {JSON.stringify(this.injected.store, null, 4)}</pre>
                         <Button
                             label="Clicky"
                             onClick={this.onToggleClick}
@@ -489,39 +495,20 @@ export class Application extends React.Component<IInternalProps & IExternalProps
     }
 
     private onToggleClick = () => {
-        this.props.toggleRed()
+        this.injected.store.toggleRed()
     }
 }
-
-
-export default inject<{ store: IStore }, IExternalProps, IInternalProps, any>(({ store }) => ({
-    isRed: store.isRed,
-    $data: store,
-
-    fetchRevision() {
-        store.fetchRevision()
-    },
-
-    toggleRed() {
-        store.toggleRed()
-    },
-}))(observer<IReactComponent<IExternalProps>>(Application))
 
 
 /*
  * Types
  */
 
-interface IExternalProps {
+interface IProps {
     className?: any
 }
 
 
-interface IInternalProps {
-    $data: any
-    isRed: boolean
-
-    fetchRevision(): void
-
-    toggleRed(): void
+interface IPropsInjected extends IProps {
+    store: IStore
 }
