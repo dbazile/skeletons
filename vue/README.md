@@ -51,4 +51,4 @@
 |----------|-------------|
 | `NODE_ENV` | If `production`, bundle will be minified and stripped of development helpers/scaffolding code (defaults to `development`). |
 | `API_PROXY` | Overrides the default hostname webpack-dev-server proxies API requests to during local development. |
-| `COMPILER_TARGET` | Overrides the ECMAScript version of code TypeScript emits (defaults to `es7` in dev, `es5` in prod). |
+| `COMPILER_TARGET` | Overrides the ECMAScript version of code TypeScript emits (defaults to `es7` in dev, `es6` in prod). |
