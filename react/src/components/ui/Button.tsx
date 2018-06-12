@@ -7,6 +7,7 @@ import styles from './Button.less'
 export const Button = ({
     className,
     classes,
+    disabled,
     primary,
     danger,
     icon,
@@ -18,10 +19,13 @@ export const Button = ({
         className={$(
             styles.root,
             className,
+            disabled && styles.disabled,
             primary && styles.primary,
             danger && styles.danger,
+            disabled && classes && classes.disabled,
         )}
-        onClick={onClick}
+        disabled={disabled}
+        onClick={disabled ? undefined : onClick}
     >
         {icon && (
             <span className={$(styles.icon, classes && classes.icon)}>{icon}</span>
@@ -38,17 +42,19 @@ interface IProps {
     className?: string
     children?: any
 
-    primary?: boolean
+    classes?: IClasses
     danger?: boolean
+    disabled?: boolean
     icon?: any
     label?: string
-    classes?: IClasses
+    primary?: boolean
 
     onClick?(): void
 }
 
 
 interface IClasses {
+    disabled?: string
     icon?: string
     label?: string
 }

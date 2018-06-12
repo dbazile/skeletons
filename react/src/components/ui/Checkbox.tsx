@@ -26,14 +26,19 @@ export const Checkbox = ({
             checked === null && styles.isIndeterminate,
             disabled && styles.isDisabled,
         )}
-        onClick={() => !disabled && onChange && onChange(!checked)}
+        onClick={(event) => {
+            // Stop label ancestor from replaying `click` event to the <input/>
+            event.preventDefault()
+
+            return !disabled && onChange && onChange(!checked)
+        }}
         onKeyDown={(e) => !disabled && onChange && isToggleKey(e.key) && onChange(!checked)}
     >
         <input
+            readOnly
             type="checkbox"
             checked={checked}
             disabled={disabled}
-            onChange={() => !disabled && onChange && onChange(!checked)}
         />
         <svg viewBox="0 0 16 16">
             {checked === true && (

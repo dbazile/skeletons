@@ -129,7 +129,7 @@ describe('<Checkbox/>', () => {
             />,
         )
 
-        component.simulate('click')
+        component.simulate('click', { preventDefault: jest.fn() })
 
         expect(stub).toHaveBeenCalledTimes(1)
         expect(stub).toHaveBeenCalledWith(true)
@@ -144,7 +144,7 @@ describe('<Checkbox/>', () => {
             />,
         )
 
-        component.simulate('click')
+        component.simulate('click', { preventDefault: jest.fn() })
 
         expect(stub).toHaveBeenCalledTimes(0)
     })
