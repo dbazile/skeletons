@@ -7,6 +7,14 @@ import classes from '../../src/components/Application.less'
 
 
 describe('<Application/>', () => {
+    let store: any
+
+    beforeEach(() => {
+        store = {
+            fetchRevision: jest.fn(),
+        }
+    })
+
     it('has mocks for CSS modules', () => {
         expect(classes.subtitle).toEqual('subtitle')
         expect(classes.isRed).toEqual('isRed')
@@ -15,12 +23,10 @@ describe('<Application/>', () => {
     it('can render', () => {
         const component = renderer.create(
             <Application
-                fetchRevision={() => {/* noop */}}
-                toggleRed={() => {/* noop */}}
-                $data={{}}
-                isRed={true}
+                store={store}
             />,
         )
         expect(component.toJSON()).toMatchSnapshot()
+        expect(store.fetchRevision).toHaveBeenCalledTimes(1)
     })
 })

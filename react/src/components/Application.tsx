@@ -453,11 +453,7 @@ const UISandbox = () => (
 @observer
 export class Application extends React.Component<IProps, {}> {
     componentDidMount() {
-        this.injected.store.fetchRevision()
-    }
-
-    private get injected() {
-        return this.props as IPropsInjected
+        this.props.store.fetchRevision()
     }
 
     render() {
@@ -465,7 +461,7 @@ export class Application extends React.Component<IProps, {}> {
             <BrowserRouter>
                 <main className={$({
                     [styles.root]: true,
-                    [styles.isRed]: this.injected.store.isRed,
+                    [styles.isRed]: this.props.store.isRed,
                     'some-global-thing': true,
                 })}>
                     <header>
@@ -483,7 +479,7 @@ export class Application extends React.Component<IProps, {}> {
                     </Switch>
 
                     <footer>
-                        <pre>this.injected.store = {JSON.stringify(this.injected.store, null, 4)}</pre>
+                        <pre>this.props.store = {JSON.stringify(this.props.store, null, 4)}</pre>
                         <Button
                             label="Clicky"
                             onClick={this.onToggleClick}
@@ -495,7 +491,7 @@ export class Application extends React.Component<IProps, {}> {
     }
 
     private onToggleClick = () => {
-        this.injected.store.toggleRed()
+        this.props.store.toggleRed()
     }
 }
 
@@ -506,9 +502,6 @@ export class Application extends React.Component<IProps, {}> {
 
 interface IProps {
     className?: any
-}
 
-
-interface IPropsInjected extends IProps {
-    store: IStore
+    store?: IStore
 }
