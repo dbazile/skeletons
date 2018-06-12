@@ -9,7 +9,7 @@ checkpoint 'Running linter...'
 
 
 checkpoint 'Running type checks...'
-tsc --noEmit --pretty
+tsc --noEmit --pretty -p test/tsconfig.json
 
 
 checkpoint 'Running unit tests...'
