@@ -1,0 +1,41 @@
+@import "../../styles/constants";
+
+@headerBackgroundColor: #888;
+@footerBackgroundColor: #f5f5f5;
+@spacing: 15px;
+
+.root {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: @SHADOW;
+    border-radius: @BORDER_RADIUS;
+    background-color: white;
+}
+
+.header {
+    border-radius: @BORDER_RADIUS @BORDER_RADIUS 0 0;
+    padding: @spacing;
+    background-color: @headerBackgroundColor;
+    color: white;
+    cursor: default;
+}
+
+.title {
+    font-size: 16px;
+    text-shadow: 1px 1px fade(black, 5%);
+}
+
+.subtitle {
+    opacity: .5;
+}
+
+.body {
+    padding: @spacing;
+}
+
+.footer {
+    padding: @spacing;
+    background-color: @footerBackgroundColor;
+    cursor: default;
+}

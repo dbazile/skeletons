@@ -11,6 +11,7 @@ import { Checkbox } from './ui/Checkbox'
 import { Label } from './ui/Label'
 import { Menu, MenuDivider, MenuHeader, MenuItem } from './ui/Menu'
 import { Pager } from './ui/Pager'
+import { Panel } from './ui/Panel'
 import { ProgressBar } from './ui/ProgressBar'
 import { Radio } from './ui/Radio'
 import { SegmentedControl } from './ui/SegmentedControl'
@@ -230,6 +231,23 @@ const UISandbox = () => (
                     size={10}
                     totalCount={90}
                 />
+            </li>
+
+            <li>
+                <h2>&lt;Panel&gt;</h2>
+
+                <Panel
+                    title="Title"
+                    subtitle="Title"
+                    footer={<button>Do Something</button>}
+                >
+                    lorem ipsum
+                </Panel>
+                <br/>
+
+                <Panel>
+                    without header or footer
+                </Panel>
             </li>
 
             <li>
