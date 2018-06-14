@@ -1,10 +1,19 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosPromise, AxiosRequestConfig } from 'axios'
 
 
 const TIMEOUT = 30000
 
+let _onUnauthorizedSubscribers: Callback[] = []
+
 const _client: any = axios.create({
     timeout: TIMEOUT,
+    validateStatus(status: number) {
+        if (status === 401) {
+            _notifyUnauthorizedSubscribers()
+        }
+
+        return status >= 200 && status < 300
+    },
 })
 
 
@@ -28,6 +37,50 @@ export function put<T>(url: string, data?: any, config?: AxiosRequestConfig): IR
 }
 
 
-export interface IResponse<T> extends AxiosResponse {
+export function onUnauthorized(func: Callback): Callback {
+    if (typeof func !== 'function') {
+        throw new Error('callback must be a function')
+    }
+
+    _onUnauthorizedSubscribers.push(func)
+
+    // Enable subscribers to unsubscribe
+    return () => {
+        _onUnauthorizedSubscribers = _onUnauthorizedSubscribers.filter(f => f === func)
+    }
+}
+
+
+export function isSessionExpired(err: AxiosError) {
+    return err.response && err.response.status === 401
+}
+
+
+export interface IResponse<T> extends AxiosPromise<T> {
     data: T
+}
+
+
+type Callback = () => void
+
+
+//
+// Helpers
+//
+
+function _notifyUnauthorizedSubscribers() {
+    if (!_onUnauthorizedSubscribers.length) {
+        return
+    }
+
+    console.debug('[http] Notifying subscribers of HTTP 401')
+
+    _onUnauthorizedSubscribers.forEach(callback => {
+        try {
+            callback()
+        }
+        catch (err) {
+            console.error('[http] Error in subscriber callback:', err)
+        }
+    })
 }
