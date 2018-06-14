@@ -129,7 +129,7 @@ describe('<Radio/>', () => {
             />,
         )
 
-        component.simulate('click')
+        component.simulate('click', { preventDefault: jest.fn() })
 
         expect(stub).toHaveBeenCalledTimes(1)
         expect(stub).toHaveBeenCalledWith(true)
@@ -144,7 +144,7 @@ describe('<Radio/>', () => {
             />,
         )
 
-        component.simulate('click')
+        component.simulate('click', { preventDefault: jest.fn() })
 
         expect(stub).toHaveBeenCalledTimes(0)
     })
@@ -158,9 +158,9 @@ describe('<Radio/>', () => {
             />,
         )
 
-        component.simulate('click')
-        component.simulate('click')
-        component.simulate('click')
+        component.simulate('click', { preventDefault: jest.fn() })
+        component.simulate('click', { preventDefault: jest.fn() })
+        component.simulate('click', { preventDefault: jest.fn() })
 
         expect(stub).toHaveBeenCalledTimes(0)
     })

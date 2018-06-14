@@ -26,14 +26,19 @@ export const Radio = ({
             checked === null && styles.isIndeterminate,
             disabled && styles.isDisabled,
         )}
-        onClick={() => !disabled && !checked && onChange && onChange(true)}
+        onClick={(event) => {
+            // Stop label ancestor from replaying `click` event to the <input/>
+            event.preventDefault()
+
+            return !disabled && !checked && onChange && onChange(true)
+        }}
         onKeyDown={(e) => !disabled && !checked && isToggleKey(e.key) && onChange && onChange(true)}
     >
         <input
+            readOnly
             type="radio"
             checked={checked}
             disabled={disabled}
-            onChange={() => !disabled && !checked && onChange && onChange(true)}
         />
         <svg viewBox="0 0 10 10">
             <circle
