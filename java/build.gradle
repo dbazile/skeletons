@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'maven-publish'
 }
 
 
@@ -27,6 +28,33 @@ repositories {
 }
 
 
+publishing {
+    repositories {
+        maven {
+            url "https://maven-internal/path/to/${version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases'}"
+            credentials {
+                username = MAVEN_INTERNAL_USERNAME  // from ~/.gradle/gradle.properties
+                password = MAVEN_INTERNAL_PASSWORD  // from ~/.gradle/gradle.properties
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact javadocJar
+        }
+    }
+}
+
+
+// javadoc {
+//     doFirst {
+//         options.addStringOption('-add-modules', 'java.xml.bind')
+//     }
+// }
+
+
 task bundle(type: Jar) {
     manifest.attributes 'Main-Class': mainClassName
     appendix = 'bundle'
@@ -41,8 +69,9 @@ task bundle(type: Jar) {
 }
 
 
-// javadoc {
-//     doFirst {
-//         options.addStringOption('-add-modules', 'java.xml.bind')
-//     }
-// }
+task javadocJar(type: Jar) {
+    dependsOn += javadoc
+
+    from javadoc.destinationDir
+    classifier 'javadoc'
+}
