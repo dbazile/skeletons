@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -19,22 +17,16 @@ public final class Config {
     private static final String PROPERTY_OVERRIDE_PATH = "config_path";
     private static final String RESOURCE_PATH = "config.properties";
 
-    private static final String KEY_GREETING = "myproject.greeting";
-    private static final String KEY_FAREWELL = "myproject.farewell";
-    private static final String KEY_WAIT_TIME = "myproject.wait_time";
+    private static final String KEY_PORT = "myproject.port";
 
     private static Config INSTANCE;
 
-    private final String farewell;
-    private final String greeting;
-    private final Duration waitTime;
+    private final int port;
 
     private Config() {
         final Properties props = loadProperties();
 
-        this.waitTime = readDuration(props, KEY_WAIT_TIME);
-        this.greeting = readString(props, KEY_GREETING);
-        this.farewell = readString(props, KEY_FAREWELL);
+        this.port = readInt(props, KEY_PORT);
     }
 
     public static synchronized Config getInstance() throws Error {
@@ -45,16 +37,8 @@ public final class Config {
         return INSTANCE;
     }
 
-    public String getFarewell() {
-        return farewell;
-    }
-
-    public String getGreeting() {
-        return greeting;
-    }
-
-    public Duration getWaitTime() {
-        return waitTime;
+    public int getPort() {
+        return port;
     }
 
     private static Properties loadProperties() {
@@ -94,19 +78,19 @@ public final class Config {
         return properties;
     }
 
-    private static Duration readDuration(Properties props, String key) {
+    private static int readInt(Properties props, String key) {
         try {
-            return Duration.parse(readString(props, key));
+            return Integer.valueOf(readString(props, key));
         }
-        catch (DateTimeParseException e) {
-            throw new Error("invalid duration at property '" + key + "': " + e.getMessage(), e);
+        catch (NumberFormatException e) {
+            throw new Error("invalid integer at property '" + key + "': " + e.getMessage(), e);
         }
     }
 
     private static String readString(Properties props, String key) {
-        final String value = System.getProperty(key, props.getProperty(key));
+        final String value = System.getProperty(key, props.getProperty(key, ""));
 
-        if (value == null || value.trim().equals("")) {
+        if (value.trim().isEmpty()) {
             throw new Error("missing value for '" + key + "'");
         }
 
