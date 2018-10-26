@@ -64,14 +64,32 @@ compileJava {
 }
 
 
+jar {
+    manifest.attributes(
+        'Implementation-Title':   project.name,
+        'Implementation-Version': project.version,
+        'Main-Class':             mainClassName,
+        'Build-Author':           System.getProperty('user.name'),
+        'Build-Host':             InetAddress.localHost.hostName,
+        'Build-Timestamp':        new Date(),
+        'Git-Commit':             _getCommit(),
+    )
+}
+
+
 javadoc {
     options.addStringOption('-add-modules', 'java.xml.bind')
 }
 
 
+run {
+    jvmArgs += ['--add-modules=java.xml.bind']
+}
+
 task bundle(type: Jar) {
-    manifest.attributes 'Main-Class': mainClassName
     appendix = 'bundle'
+    duplicatesStrategy = 'exclude'
+    manifest.attributes = jar.manifest.attributes
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
         exclude 'META-INF/*.SF'
@@ -88,4 +106,20 @@ task javadocJar(type: Jar) {
 
     from javadoc.destinationDir
     classifier 'javadoc'
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Helpers
+
+def _getCommit(truncate = Integer.MAX_VALUE) {
+    new ByteArrayOutputStream().with { stream ->
+        exec {
+            commandLine = ['git', 'rev-parse', 'HEAD']
+            standardOutput = stream
+        }
+
+        return stream.toString().trim().take(truncate)
+    }
 }

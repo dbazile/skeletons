@@ -4,3 +4,6 @@ build/
 out/
 *.iml
 .idea
+
+*.swp
+*.swo
