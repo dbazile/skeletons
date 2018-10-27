@@ -4,23 +4,22 @@
 
     gradle run
     
--OR- 
-    
-    gradle bundle && java -jar build/libs/myproject-bundle-*.jar
 
 ### Configuration
 
 Point to a config overrides file:
 
-    java \
-        -Dconfig_path=/path/to/config \
-        -jar build/libs/myproject-bundle-*.jar
+	gradle clean install
+
+	MYPROJECT_OPTS=-Dconfig_path=/path/to/config \
+		build/install/myproject/bin/myproject
 
 Override one or more individual properties:
 
-    java \
-        -D'myproject.greeting=how do you do' \
-        -jar build/libs/myproject-bundle-*.jar
+    gradle clean install
+    
+    MYPROJECT_OPTS="-D'myproject.greeting=how do you do'" \
+        build/install/myproject/bin/myproject
 
 
 ## Testing
@@ -30,5 +29,4 @@ Override one or more individual properties:
 
 ## Packaging for Deployment
 
-    gradle assemble  # for a normal Gradle application distribution
-    gradle bundle    # for a single JAR with all dependencies
+    gradle assemble

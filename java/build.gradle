@@ -5,11 +5,15 @@ plugins {
 }
 
 
-group               = 'dbazile'
-version             = '1.0.0-SNAPSHOT'
-mainClassName       = 'dbazile.Main'
+group                     = 'dbazile'
+version                   = '1.0.0-SNAPSHOT'
 
-sourceCompatibility = 1.9
+sourceCompatibility       = 1.9
+targetCompatibility       = 1.9
+
+// Application Plugin
+mainClassName             = 'dbazile.Main'
+applicationDefaultJvmArgs = ["--add-modules=java.xml.bind"]
 
 
 dependencies {
@@ -81,24 +85,25 @@ javadoc {
     options.addStringOption('-add-modules', 'java.xml.bind')
 }
 
-
-run {
-    jvmArgs += ['--add-modules=java.xml.bind']
-}
-
-task bundle(type: Jar) {
-    appendix = 'bundle'
-    duplicatesStrategy = 'exclude'
-    manifest.attributes = jar.manifest.attributes
-
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
-        exclude 'META-INF/*.SF'
-        exclude 'META-INF/*.DSA'
-        exclude 'META-INF/*.RSA'
-    }
-
-    with jar
-}
+///*
+// * NOTE: This is just here as a simple reference. As it stands, JAX-RS JSON
+// *       serialization doesn't work properly because of path collisions in
+// *       META-INF/services/* (and probably a dozen more reasons) but it might
+// *       work for applications that don't try too much classpath wizardry.
+// */
+//task bundle(type: Jar) {
+//    appendix = 'bundle'
+//    duplicatesStrategy = DuplicatesStrategy.WARN
+//    manifest.attributes = jar.manifest.attributes
+//
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
+//        exclude 'META-INF/*.SF'
+//        exclude 'META-INF/*.DSA'
+//        exclude 'META-INF/*.RSA'
+//    }
+//
+//    with jar
+//}
 
 
 task javadocJar(type: Jar) {

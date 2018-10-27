@@ -1,40 +1,45 @@
 package dbazile.greeting;
 
 import java.time.Instant;
+import java.util.Date;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @Path("/")
 public class GreetingResource {
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Greeting greet(@QueryParam("name") @DefaultValue("World") String name) {
         return new Greeting("hi there " + name);
     }
 
     @XmlRootElement
+    @XmlAccessorType(XmlAccessType.FIELD)
     static class Greeting {
         private final String data;
+
+        @XmlJavaTypeAdapter(JaxbInstantAdapter.class)
         private final Instant timestamp;
 
-//        public Greeting() {
-//        }
+        private Greeting() {
+            this.data = null;
+            this.timestamp = null;
+        }
 
         public Greeting(String data) {
             this.data = data;
             this.timestamp = Instant.now();
         }
-
-//        public Greeting(String data, Instant timestamp) {
-//            this.data = data;
-//            this.timestamp = timestamp;
-//        }
 
         public String getData() {
             return data;
@@ -43,13 +48,18 @@ public class GreetingResource {
         public String getTimestamp() {
             return timestamp.toString();
         }
+    }
 
-//        public void setData(String data) {
-//            this.data = data;
-//        }
-//
-//        public void setTimestamp(Instant timestamp) {
-//            this.timestamp = timestamp;
-//        }
+    public static class JaxbInstantAdapter extends XmlAdapter<Date, Instant> {
+
+        @Override
+        public Date marshal(Instant instant) {
+            return Date.from(instant);
+        }
+
+        @Override
+        public Instant unmarshal(Date date) {
+            return date.toInstant();
+        }
     }
 }
