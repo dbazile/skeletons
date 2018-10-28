@@ -13,7 +13,7 @@ targetCompatibility       = 1.9
 
 // Application Plugin
 mainClassName             = 'dbazile.Main'
-applicationDefaultJvmArgs = ["--add-modules=java.xml.bind"]
+applicationDefaultJvmArgs = ['--add-modules=java.xml.bind']
 
 
 dependencies {
@@ -85,12 +85,12 @@ javadoc {
     options.addStringOption('-add-modules', 'java.xml.bind')
 }
 
-///*
-// * NOTE: This is just here as a simple reference. As it stands, JAX-RS JSON
-// *       serialization doesn't work properly because of path collisions in
-// *       META-INF/services/* (and probably a dozen more reasons) but it might
-// *       work for applications that don't try too much classpath wizardry.
-// */
+/*
+ * NOTE: This is just here as a simple reference. As it stands, JAX-RS JSON
+ *       serialization doesn't work properly because of path collisions in
+ *       META-INF/services/* (and probably a dozen more reasons) but it might
+ *       work for applications that don't try too much classpath wizardry.
+ */
 //task bundle(type: Jar) {
 //    appendix = 'bundle'
 //    duplicatesStrategy = DuplicatesStrategy.WARN
