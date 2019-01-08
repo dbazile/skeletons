@@ -3,7 +3,7 @@ plugins {
     id 'application'
     id 'maven-publish'
     
-    id 'nebula.release' version '7.0.0'
+    id 'nebula.release' version '9.2.0'
     id 'org.ajoberstar.grgit' version '3.0.0'
 }
 
