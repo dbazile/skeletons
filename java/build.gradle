@@ -59,6 +59,7 @@ publishing {
         maven(MavenPublication) {
             from components.java
             artifact javadocJar
+            artifact sourcesJar
         }
     }
 }
@@ -86,13 +87,14 @@ javadoc {
     options.addStringOption('-add-modules', 'java.xml.bind')
 }
 
+
 /*
  * NOTE: This is just here as a simple reference. As it stands, JAX-RS JSON
  *       serialization doesn't work properly because of path collisions in
  *       META-INF/services/* (and probably a dozen more reasons) but it might
  *       work for applications that don't try too much classpath wizardry.
  */
-//task bundle(type: Jar) {
+//task fatjar(type: Jar) {
 //    appendix = 'bundle'
 //    duplicatesStrategy = DuplicatesStrategy.WARN
 //    manifest.attributes = jar.manifest.attributes
@@ -107,11 +109,15 @@ javadoc {
 //}
 
 
-task javadocJar(type: Jar) {
-    dependsOn += javadoc
-
+task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
-    classifier 'javadoc'
+    classifier = 'javadoc'
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
 }
 
 
@@ -119,6 +125,10 @@ task javadocJar(type: Jar) {
 
 // Helpers
 
+/*
+ * NOTE: This is here as a reference if grgit plugin can't be used for
+ *       whatever reason.
+ */
 //def _getCommit(truncate = Integer.MAX_VALUE) {
 //    new ByteArrayOutputStream().with { stream ->
 //        exec {
