@@ -5,6 +5,12 @@
     gradle run
     
 
+## Building
+
+    gradle build snapshot  # Normal Development
+    gradle build final     # Release
+
+
 ### Configuration
 
 Point to a config overrides file:
