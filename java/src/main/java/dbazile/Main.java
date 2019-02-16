@@ -1,9 +1,11 @@
 package dbazile;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.servlet.ServletContainer;
+import org.eclipse.jetty.server.Slf4jRequestLog;
+import org.glassfish.jersey.internal.inject.AbstractBinder;
+import org.glassfish.jersey.jetty.JettyHttpContainer;
+import org.glassfish.jersey.server.ContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,17 +15,16 @@ public final class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        final int port = Config.getInstance().getPort();
+        final Config config = Config.getInstance();
 
-        final Server server = new Server(port);
+        final Server server = new Server(config.getBindAddr());
 
-        final ServletContextHandler context = new ServletContextHandler();
-        context.setContextPath("/");
-        server.setHandler(context);
+        // Enable request logging
+        server.setRequestLog(new Slf4jRequestLog());
 
-        final ServletHolder servletHolder = context.addServlet(ServletContainer.class, "/*");
-        servletHolder.setInitOrder(0);
-        servletHolder.setInitParameter("jersey.config.server.provider.packages", "dbazile");
+        // Attach application handler
+        final AppConfig appConfig = new AppConfig(config);
+        server.setHandler(ContainerFactory.createContainer(JettyHttpContainer.class, appConfig));
 
         try {
             server.start();
@@ -32,6 +33,21 @@ public final class Main {
         catch (Exception e) {
             LOG.error("Oh no", e);
             System.exit(1);
+        }
+    }
+
+    private static class AppConfig extends ResourceConfig {
+        AppConfig(Config config) {
+            // Point at JAX-RS resource package
+            packages("dbazile.greeting");
+
+            // Configure dependency injection
+            register(new AbstractBinder() {
+                @Override
+                protected void configure() {
+                    bind(config).to(Config.class);
+                }
+            });
         }
     }
 }
