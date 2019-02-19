@@ -22,9 +22,21 @@ public final class Main {
         // Enable request logging
         server.setRequestLog(new Slf4jRequestLog());
 
+        final ResourceConfig rc = new ResourceConfig();
+
+        // JAX-RS resource package
+        rc.packages("dbazile.greeting");
+
+        // Dependency injection
+        rc.register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(config).to(Config.class);
+            }
+        });
+
         // Attach application handler
-        final AppConfig appConfig = new AppConfig(config);
-        server.setHandler(ContainerFactory.createContainer(JettyHttpContainer.class, appConfig));
+        server.setHandler(ContainerFactory.createContainer(JettyHttpContainer.class, rc));
 
         try {
             server.start();
@@ -33,21 +45,6 @@ public final class Main {
         catch (Exception e) {
             LOG.error("Oh no", e);
             System.exit(1);
-        }
-    }
-
-    private static class AppConfig extends ResourceConfig {
-        AppConfig(Config config) {
-            // Point at JAX-RS resource package
-            packages("dbazile.greeting");
-
-            // Configure dependency injection
-            register(new AbstractBinder() {
-                @Override
-                protected void configure() {
-                    bind(config).to(Config.class);
-                }
-            });
         }
     }
 }
