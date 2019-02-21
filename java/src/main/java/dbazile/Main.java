@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Slf4jRequestLog;
 import org.glassfish.jersey.internal.inject.AbstractBinder;
 import org.glassfish.jersey.jetty.JettyHttpContainer;
+import org.glassfish.jersey.message.MessageProperties;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
@@ -23,6 +24,8 @@ public final class Main {
         server.setRequestLog(new Slf4jRequestLog());
 
         final ResourceConfig rc = new ResourceConfig();
+
+        rc.property(MessageProperties.XML_FORMAT_OUTPUT, true);
 
         // JAX-RS resource package
         rc.packages("dbazile.greeting");
