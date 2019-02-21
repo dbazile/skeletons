@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'maven-publish'
 
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'nebula.release' version '9.2.0'
     id 'org.ajoberstar.grgit' version '3.0.0'
 }
@@ -77,25 +78,60 @@ jar {
 }
 
 
+shadowJar {
+    // Fixes path collisions in META-INF/services
+    mergeServiceFiles()
+}
+
+
 /*
- * NOTE: This is just here as a simple reference. As it stands, JAX-RS JSON
- *       serialization doesn't work properly because of path collisions in
- *       META-INF/services/* (and probably a dozen more reasons) but it might
- *       work for applications that don't try too much classpath wizardry.
+ * NOTE: This is here as a reference if shadow plugin can't be used for
+ *       whatever reason.
  */
-//task fatjar(type: Jar) {
-//    appendix = 'bundle'
-//    duplicatesStrategy = DuplicatesStrategy.WARN
-//    manifest.attributes = jar.manifest.attributes
+// task fatjar(type: Jar) {
+//     appendix = 'bundle'
+//     duplicatesStrategy = DuplicatesStrategy.WARN
+//     manifest.attributes = jar.manifest.attributes
 //
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
-//        exclude 'META-INF/*.SF'
-//        exclude 'META-INF/*.DSA'
-//        exclude 'META-INF/*.RSA'
-//    }
+//     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } } {
+//         exclude 'META-INF/LICENSE*'
+//         exclude 'META-INF/NOTICE*'
+//         exclude 'META-INF/*.SF'
+//         exclude 'META-INF/*.DSA'
+//         exclude 'META-INF/*.RSA'
 //
-//    with jar
-//}
+//         // Deal with clobbering of Jersey autoscan config files
+//         filesMatching 'META-INF/services/org.glassfish.jersey.internal.spi.*Discoverable', {
+//
+//             // Silence duplication warning since we're about to "fix" it
+//             duplicatesStrategy = DuplicatesStrategy.INCLUDE
+//
+//             // Manually concat into build dir
+//             try {
+//                 def destinationFile = file("build/tmp/fatjar/META-INF/services/$it.name")
+//                 def content = it.file.text.trim()
+//                 logger.debug('Attempting to manually concat {}:\n---\nContent:\n{}\n---', it.relativePath, content)
+//
+//                 // Ensure directory tree exists
+//                 destinationFile.parentFile.mkdirs()
+//
+//                 // Append
+//                 destinationFile.append(content + '\n')
+//             }
+//             catch(Exception e) {
+//                 logger.error('Concat failed', e)
+//                 throw e
+//             }
+//         }
+//
+//         // Add the "fixed" files
+//         from files('build/tmp/fatjar'), {
+//             include 'META-INF/services/*'
+//         }
+//     }
+//
+//     with jar
+// }
 
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
