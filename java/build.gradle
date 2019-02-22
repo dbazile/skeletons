@@ -89,6 +89,7 @@ shadowJar {
  *       whatever reason.
  */
 // task fatjar(type: Jar) {
+//     with jar
 //     appendix = 'bundle'
 //     duplicatesStrategy = DuplicatesStrategy.WARN
 //     manifest.attributes = jar.manifest.attributes
@@ -129,8 +130,6 @@ shadowJar {
 //             include 'META-INF/services/*'
 //         }
 //     }
-//
-//     with jar
 // }
 
 
